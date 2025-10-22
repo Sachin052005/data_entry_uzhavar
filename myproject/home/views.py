@@ -4,7 +4,7 @@ from .models import Farmer
 # IMPORT BOTH FORMS
 from .forms import FarmerCreateForm, FarmerEditForm 
 
-def farmer_entry(request):
+def index(request):
     success = False
     # Use FarmerCreateForm for entry
     if request.method == 'POST':
