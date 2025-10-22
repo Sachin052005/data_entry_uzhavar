@@ -1,0 +1,253 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Farmer Records</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="{% static 'logo.png' %}" type="image/png">
+    <style>
+        :root {
+            --primary-color: #4CAF50;
+            --secondary-color: #FFC107;
+            --bg-white: #fff;
+            --bg-light: #f7f7f7;
+            --text-color-dark: #2c3e50;
+            --text-color-light: #7f8c8d;
+            --box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+            --transition-speed: 0.3s;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+
+        body { background-color: var(--bg-light); color: var(--text-color-dark); }
+
+        header.navbar {
+            background: var(--bg-white);
+            padding: 15px 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+
+        header.navbar h1 { color: var(--primary-color); }
+
+        .container { max-width: 1200px; margin: 50px auto; padding: 0 20px; }
+        
+        /* Container for messages and buttons */
+        .utility-links {
+            display: flex; 
+            gap: 15px; 
+            margin-top: 30px; 
+            justify-content: center;
+            flex-wrap: wrap; /* Added for mobile wrapping */
+        }
+        
+        /* --- Standard Table Styling --- */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--bg-white);
+            box-shadow: var(--box-shadow);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+        }
+        
+        /* Use text alignment to better handle multi-line content */
+        td:nth-child(8) { text-align: left; } /* Farmer Needs column */
+        
+        th {
+            background-color: var(--primary-color);
+            color: var(--bg-white);
+            font-weight: 600;
+        }
+
+        tr:nth-child(even) { background-color: #f2f2f2; }
+        tr:hover { background-color: #e8f5e9; }
+
+        a {
+            text-decoration: none;
+            color: var(--primary-color);
+            font-weight: 600;
+            transition: color var(--transition-speed);
+        }
+
+        a:hover { color: #388E3C; }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+            text-align: center;
+            display: inline-block;
+        }
+
+        .primary-btn {
+            background-color: var(--primary-color);
+            color: var(--bg-white);
+            border: none;
+        }
+        .primary-btn:hover {
+            background-color: #388E3C;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+        
+        /* --- Mobile Responsiveness (Card View) --- */
+        @media (max-width: 768px) {
+            .container { padding: 0 10px; }
+            
+            /* Hide the table headers and allow for card layout */
+            table, thead, tbody, th, td, tr { 
+                display: block; 
+            }
+            
+            thead tr {
+                position: absolute;
+                top: -9999px;
+                left: -9999px;
+            }
+            
+            tr { 
+                border: 1px solid #ccc;
+                margin-bottom: 15px;
+                border-radius: 8px;
+                box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+                overflow: hidden;
+            }
+            
+            td {
+                border: none;
+                border-bottom: 1px solid #eee;
+                position: relative;
+                padding-left: 50%; /* Make room for the data label */
+                text-align: right !important; /* Force data to the right */
+            }
+            
+            td:before {
+                /* Use the data-label attribute value as the label */
+                content: attr(data-label);
+                position: absolute;
+                left: 0;
+                width: 50%;
+                padding-left: 15px;
+                white-space: nowrap;
+                text-align: left;
+                font-weight: 600;
+                color: var(--text-color-dark);
+            }
+            
+            td:last-child {
+                border-bottom: 0; /* No border on the last item in the card */
+            }
+            
+            /* Special styling for the Actions row to center buttons */
+            td[data-label="Actions"] {
+                text-align: center !important;
+                padding-left: 0;
+                display: flex;
+                justify-content: center;
+                gap: 15px;
+            }
+            
+            td[data-label="Actions"]:before {
+                content: none;
+            }
+            
+            /* Ensure the no-records message is visible */
+            .no-records td {
+                padding-left: 15px;
+                text-align: center !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="navbar">
+        <h1>All Farmer Records</h1>
+    </header>
+
+    <div class="container">
+        {% for message in messages %}
+            <div class="messages-container" style="background-color: #e8f5e9; color: #2E7D32; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-weight: 600; text-align: center;">
+                {{ message }}
+            </div>
+        {% endfor %}
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Employee ID</th>
+                    <th>Name</th>
+                    <th>Village</th>
+                    <th>Phone</th>
+                    <th>Date</th> <!-- NEW DATE COLUMN ADDED -->
+                    <th>Crop</th>
+                    <th>Area</th>
+                    <th>Farmer Needs</th>
+                    <th>Next Visit Date</th>
+                    <th>Others</th>
+                    <th>Location</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for r in records %}
+            <tr>
+                <td data-label="Employee ID">{{ r.employee }}</td>
+                <td data-label="Name">{{ r.name }}</td>
+                <td data-label="Village">{{ r.village }}</td>
+                <td data-label="Phone">{{ r.phone }}</td>
+                <td data-label="Date">{{ r.today_date }}</td> <!-- DISPLAYING THE DATE FIELD -->
+                <td data-label="Crop">{{ r.crop }}</td>
+                <td data-label="Area">{{ r.area }}</td>
+                <td data-label="Farmer Needs">
+                    {% if r.seed %}Seed {% endif %}
+                    {% if r.pesticide %}Pesticide {% endif %}
+                    {% if r.fertilizer %}Fertilizer {% endif %}
+                    {% if r.drip %}Drip {% endif %}
+                    {% if r.machinery %}Machinery {% endif %}
+                    {% if r.nursery %}Nursery {% endif %}
+                    {% if r.sprayer %}Sprayer {% endif %}
+                </td>
+                <td data-label="Next Visit Date">{{ r.next_visit|default:"—" }}</td>
+                <td data-label="Others">{{ r.others|default:"—" }}</td>
+                <td data-label="Location">
+                    {% if r.location %}
+                        <a href="https://www.google.com/maps/search/?api=1&query={{ r.location }}" target="_blank">View Map</a>
+                    {% else %}
+                        No location
+                    {% endif %}
+                </td>
+                <td data-label="Actions">
+                   <a href="{% url 'edit_record' r.id %}">Edit</a> 
+                   <a href="{% url 'delete_record' r.id %}" style="color: #e74c3c;">Delete</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr class="no-records">
+                <td colspan="12">No records found.</td> 
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="utility-links">
+            <a href="{% url 'download_records' %}" class="btn primary-btn" style="background-color: #3498db;">
+                ⬇️ Download Records (Excel/CSV)
+            </a>
+            
+            <a href="{% url 'farmer_entry' %}" class="btn primary-btn">
+                + Add New Record
+            </a>
+        </div>
+    </div>
+</body>
+</html>

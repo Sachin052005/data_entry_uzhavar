@@ -1,0 +1,426 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uzhavarchoice - Farmer Data Entry</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="{% static 'home/logo.png' %}" type="image/png">
+
+    <style>
+        :root {
+            --primary-color: #4CAF50;
+            --secondary-color: #FFC107;
+            --bg-white: #fff;
+            --bg-light: #f7f7f7;
+            --text-color-dark: #2c3e50;
+            --text-color-light: #7f8c8d;
+            --box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+            --transition-speed: 0.3s;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+
+        body { background-color: var(--bg-light); color: var(--text-color-dark); }
+
+        /* --- HEADER STYLES --- */
+        header.navbar {
+            background: var(--bg-white);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 15px 20px;
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            position: relative;
+        }
+        
+        .header-title-group {
+            display: flex; 
+            align-items: center; 
+            gap: 10px;
+        }
+
+        .header-title-group h1 { 
+            color: var(--primary-color); 
+            margin: 0; 
+            font-size: 1.8em; 
+        }
+
+        .view-records-btn {
+            position: absolute; 
+            right: 20px; 
+            top: 50%; 
+            transform: translateY(-50%);
+            padding: 8px 15px; 
+            border-radius: 50px; 
+            border: 2px solid #4CAF50; 
+            background-color: transparent; 
+            color: #4CAF50; 
+            font-weight: 600; 
+            text-decoration: none;
+            transition: all var(--transition-speed);
+        }
+        .view-records-btn:hover {
+            background-color: #e8f5e9;
+        }
+
+        .form-container {
+            max-width: 650px;
+            margin: 50px auto;
+            background: var(--bg-white);
+            padding: 30px 40px;
+            border-radius: 15px;
+            box-shadow: var(--box-shadow);
+            transition: transform 0.3s;
+        }
+        .form-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+        }
+
+        .form-container h2 { margin-bottom: 20px; color: var(--primary-color); text-align: center; }
+
+        form p { margin-bottom: 15px; }
+        
+        /* Input Styling */
+        input[type="text"], input[type="number"], input[type="email"], select, textarea, input[type="date"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            margin-top: 5px;
+            font-size: 1em;
+            transition: border-color 0.2s;
+        }
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+
+        button, input[type="submit"] {
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+        }
+
+        .primary-btn {
+            background-color: var(--primary-color);
+            color: var(--bg-white);
+            width: 100%;
+            margin-top: 20px;
+        }
+        .primary-btn:hover {
+            background-color: #388E3C;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        .secondary-btn {
+            background-color: transparent;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+            display: block;
+            margin-top: 10px;
+        }
+        .secondary-btn:hover {
+            background-color: var(--primary-color);
+            color: var(--bg-white);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        /* Django Messages & Custom Messages Styling */
+        .messages-container {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 600;
+            text-align: center;
+        }
+        .messages-container.success, .custom-message.success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .messages-container.error, .custom-message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .custom-message {
+            /* Inherits styling from .messages-container in JS */
+        }
+
+
+        /* Farmer Needs Grid */
+        .farmer-needs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .farmer-needs-grid label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #f0f8ff;
+            padding: 8px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+        .farmer-needs-grid input[type="checkbox"]:checked + label {
+            background: #d0f0c0;
+            border: 2px solid var(--primary-color);
+        }
+        .farmer-needs-grid label:hover { background: #d0f0c0; }
+        
+        /* Media Query for responsiveness */
+        @media (max-width: 600px) {
+            .form-container {
+                margin: 20px 10px;
+                padding: 20px;
+            }
+            .header-content {
+                flex-direction: column;
+                padding: 10px 20px;
+                position: static;
+            }
+            .header-title-group {
+                margin-bottom: 10px;
+            }
+            .view-records-btn {
+                position: static; 
+                transform: none;
+                width: 100%;
+                text-align: center;
+                margin-top: 10px;
+            }
+        }
+
+    </style>
+
+    <script>
+        // Helper function to format date as YYYY-MM-DD
+        function formatDate(date) {
+            const yyyy = date.getFullYear();
+            const mm = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+            const dd = String(date.getDate()).padStart(2, '0');
+            return `${yyyy}-${mm}-${dd}`;
+        }
+
+        // Function to update the date display and check for midnight change
+        function updateDateDisplay() {
+            const dateInput = document.getElementById('id_today_date');
+            if (dateInput) {
+                const today = new Date();
+                const todayFormatted = formatDate(today);
+                
+                // Only update the input field if it's currently empty (for new entries)
+                // or if the date needs to be refreshed (past midnight check).
+                if (!dateInput.value || dateInput.value !== todayFormatted) {
+                    dateInput.value = todayFormatted;
+                }
+            }
+        }
+
+        // Function to start the date checking loop
+        function startDateUpdateLoop() {
+            // 1. Set the date immediately on load
+            updateDateDisplay();
+
+            // 2. Set an interval to check for midnight change (e.g., every 60 seconds)
+            setInterval(updateDateDisplay, 60000); 
+        }
+
+
+        function getLocation() {
+            // Display a message while fetching location
+            showMessage('Fetching location...', 'info');
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        const lat = position.coords.latitude;
+                        const lon = position.coords.longitude;
+                        const accuracy = position.coords.accuracy;
+                        // Use standard lat,lon format for easy map viewing
+                        const locationString = `${lat},${lon}`;
+                        document.getElementById('id_location').value = locationString;
+                        
+                        showMessage(`Location saved! (Accuracy: ${accuracy.toFixed(0)} meters)`, 'success');
+                    },
+                    function(error) {
+                        // Better error messages for common errors
+                        let errorMessage = "Error fetching location.";
+                        switch(error.code) {
+                            case error.PERMISSION_DENIED:
+                                errorMessage = "Location permission denied. Please enable location services for this site.";
+                                break;
+                            case error.POSITION_UNAVAILABLE:
+                                errorMessage = "Location information is unavailable.";
+                                break;
+                            case error.TIMEOUT:
+                                errorMessage = "Location request timed out. Try again.";
+                                break;
+                            default:
+                                errorMessage = "Error: " + error.message;
+                        }
+                        showMessage(errorMessage, 'error');
+                    },
+                    { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+                );
+            } else {
+                showMessage("Geolocation is not supported by this browser.", 'error');
+            }
+        }
+        
+        // Simple function to display custom messages instead of alert()
+        function showMessage(msg, type) {
+            const container = document.querySelector('.form-container');
+            let messageDiv = document.querySelector('.custom-message');
+            
+            // Clear existing timeout if one exists
+            if (window.messageTimeout) {
+                clearTimeout(window.messageTimeout);
+            }
+
+            if (!messageDiv) {
+                messageDiv = document.createElement('div');
+                messageDiv.className = 'custom-message messages-container';
+                container.insertBefore(messageDiv, container.querySelector('h2').nextSibling);
+            }
+            
+            messageDiv.textContent = msg;
+            
+            // Apply dynamic classes based on message type
+            messageDiv.classList.remove('success', 'error', 'info');
+            messageDiv.classList.add(type);
+
+            // Auto-hide the message after 5 seconds
+            window.messageTimeout = setTimeout(() => {
+                if (messageDiv.parentNode) {
+                    messageDiv.parentNode.removeChild(messageDiv);
+                }
+            }, 5000);
+        }
+
+        // Call the function on page load
+        document.addEventListener('DOMContentLoaded', startDateUpdateLoop); 
+
+    </script>
+</head>
+<body>
+    <header class="navbar">
+        <div class="header-content">
+            <div class="header-title-group">
+                <img src="{% static 'home/logo.png' %}" alt="Uzhavarchoice Logo" style="height: 80px; width: auto; object-fit: contain;">
+                <h1 style="color: #4CAF50; margin: 0; font-size: 1.8em;"></h1>
+            </div>
+            
+            <a href="{% url 'view_records' %}" 
+               class="view-records-btn">
+                View All Records
+            </a>
+        </div>
+    </header>
+
+    <div class="form-container">
+        
+        <!-- Standard Django Messages Loop -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="messages-container {{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <h2>Enter Farmer Details</h2>
+
+        <form method="post">
+            {% csrf_token %}
+
+            <!-- Employee ID Dropdown (assuming hardcoded options for simplicity) -->
+            <p>
+                <label for="id_employee">Employee ID:</label>
+                <select id="id_employee" name="employee" required>
+                    <option value="" disabled selected>Select Employee</option>
+                    <option value="Employee1">sugavanam</option>
+                    <option value="Employee2">uthirasamy</option>
+                    <option value="Employee3">sudharsan</option>
+                    <option value="Employee4">Employee4</option>
+                    <option value="Employee5">Employee5</option>
+                </select>
+            </p>
+
+            <p>
+                <label for="id_name">Name:</label>
+                <input type="text" id="id_name" name="name" required>
+            </p>
+
+            <p>
+                <label for="id_village">Village:</label>
+                <input type="text" id="id_village" name="village" required>
+            </p>
+
+            <p>
+                <label for="id_phone">Phone:</label>
+                <input type="text" id="id_phone" name="phone" required pattern="[0-9]{10}" title="Enter exactly 10 digits">
+            </p>
+
+            <!-- Today's Date Field with default value set by JavaScript -->
+            <p>
+                <label for="id_today_date">Today's Date:</label>
+                <input type="date" id="id_today_date" name="today_date" required>
+            </p>
+            
+            <p>
+                <label for="id_crop">Crop:</label>
+                <input type="text" id="id_crop" name="crop" required>
+            </p>
+
+            <p>
+                <label for="id_area">Area:</label>
+                <input type="text" id="id_area" name="area" required>
+            </p>
+
+            <!-- Farmer Needs Checkboxes -->
+            <label>Farmer Needs:</label>
+            <div class="farmer-needs-grid">
+                <label><input type="checkbox" name="seed"> Seed</label>
+                <label><input type="checkbox" name="pesticide"> Pesticide</label>
+                <label><input type="checkbox" name="fertilizer"> Fertilizer</label>
+                <label><input type="checkbox" name="drip"> Drip</label>
+                <label><input type="checkbox" name="machinery"> Machinery</label>
+                <label><input type="checkbox" name="nursery"> Nursery</label>
+                <label><input type="checkbox" name="sprayer"> Sprayer</label>
+            </div>
+
+            <p>
+                <label for="id_location">Location (Latitude,Longitude):</label>
+                <input type="text" id="id_location" name="location" required placeholder="Will be filled automatically">
+            </p>
+            <button type="button" class="secondary-btn" onclick="getLocation()">📌 Fetch Current Location</button><br>
+            
+            <p>
+                <label for="id_next_visit">Next Visit Date (optional):</label>
+                <input type="date" id="id_next_visit" name="next_visit">
+            </p>
+
+            <p>
+                <label for="id_others">Others (optional notes):</label>
+                <textarea id="id_others" name="others" placeholder="Enter additional notes about the farmer or field observations"></textarea>
+            </p>
+
+            <input type="submit" value="Submit Farmer Record" class="primary-btn">
+        </form>
+    </div>
+</body>
+</html>
