@@ -15,7 +15,7 @@ def farmer_entry(request):
             form = FarmerCreateForm()   # reset form
     else:
         form = FarmerCreateForm()
-    return render(request, 'home/farmer_entry.html', {'form': form, 'success': success})
+    return render(request, 'home/index.html', {'form': form, 'success': success})
 
 
 def edit_record(request, id):
