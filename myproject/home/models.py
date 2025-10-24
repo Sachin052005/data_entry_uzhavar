@@ -1,16 +1,13 @@
 from django.db import models
 from datetime import date # Import the date class
+from django.utils import timezone
 
 class Farmer(models.Model):
     employee = models.CharField(max_length=100)
     name = models.CharField(max_length=100)
     village = models.CharField(max_length=100)
     phone = models.CharField(max_length=15)
-    
-    # New field added. It is required, so we set a default for existing records.
-    # The default is set to a specific date to satisfy makemigrations.
-    today_date = models.DateField(default=date(2024, 1, 1), auto_now_add=False)
-    
+    today_date = models.DateField(default=timezone.now) 
     crop = models.CharField(max_length=100)
     area = models.CharField(max_length=100)
     seed = models.BooleanField(default=False)
