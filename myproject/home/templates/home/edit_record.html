@@ -1,0 +1,374 @@
+{% load static %}
+{% block main-content %}
+<div class="container my-5">
+    <!-- Message Area for success/error/geolocation updates -->
+    <div id="ui-message-container" class="text-center mb-4"></div>
+
+    <h1 class="text-center mb-5 form-title">Update Farmer Record</h1>
+    
+    <div class="form-container">
+        <form action="" method="post">
+            {% csrf_token %}
+
+            <!-- Django Messages Display -->
+            {% if messages %}
+                {% for message in messages %}
+                    <p class="{% if 'error' in message.tags %}text-danger{% else %}success-message{% endif %}">
+                        {{ message }}
+                    </p>
+                {% endfor %}
+            {% endif %}
+
+            <!-- Form Fields -->
+            <div class="form-field-group">
+                {{ form.employee.label_tag }}
+                {{ form.employee }}
+                <small class="text-danger">{{ form.employee.errors|striptags }}</small>
+            </div>
+            <div class="form-field-group">
+                {{ form.name.label_tag }}
+                {{ form.name }}
+                <small class="text-danger">{{ form.name.errors|striptags }}</small>
+            </div>
+            <div class="form-field-group">
+                {{ form.village.label_tag }}
+                {{ form.village }}
+                <small class="text-danger">{{ form.village.errors|striptags }}</small>
+            </div>
+            <div class="form-field-group">
+                {{ form.phone.label_tag }}
+                {{ form.phone }}
+                <small class="text-danger">{{ form.phone.errors|striptags }}</small>
+            </div>
+            <div class="form-field-group">
+                {{ form.crop.label_tag }}
+                {{ form.crop }}
+                <small class="text-danger">{{ form.crop.errors|striptags }}</small>
+            </div>
+            <div class="form-field-group">
+                {{ form.area.label_tag }}
+                {{ form.area }} 
+                <small class="text-danger">{{ form.area.errors|striptags }}</small>
+            </div>
+            
+            <label class="section-label">Farmer Needs:</label>
+            <div class="farmer-needs-grid">
+                <label class="checkbox-label">{{ form.seed }} {{ form.seed.label }}</label>
+                <label class="checkbox-label">{{ form.pesticide }} {{ form.pesticide.label }}</label>
+                <label class="checkbox-label">{{ form.fertilizer }} {{ form.fertilizer.label }}</label>
+                <label class="checkbox-label">{{ form.drip }} {{ form.drip.label }}</label>
+                <label class="checkbox-label">{{ form.machinery }} {{ form.machinery.label }}</label>
+                <label class="checkbox-label">{{ form.nursery }} {{ form.nursery.label }}</label>
+                <label class="checkbox-label">{{ form.sprayer }} {{ form.sprayer.label }}</label>
+            </div>
+            
+            <div class="form-field-group">
+                {{ form.next_visit.label_tag }}
+                {{ form.next_visit }}
+                <small class="text-danger">{{ form.next_visit.errors|striptags }}</small>
+            </div>
+
+            <div class="form-field-group">
+                {{ form.others.label_tag }}
+                {{ form.others }}
+                <small class="text-danger">{{ form.others.errors|striptags }}</small>
+            </div>
+
+            <div class="form-field-group">
+                {{ form.location.label_tag }}
+                {{ form.location }}
+                <small class="text-danger">{{ form.location.errors|striptags }}</small>
+            </div>
+
+            <div class="button-group">
+                <button type="button" class="secondary-btn" id="location-btn" onclick="getLocation()">
+                    <span id="location-icon">📍</span> Fetch Current Location
+                </button>
+                <input type="submit" value="🔄 Update Record" class="primary-btn">
+                <a href="{% url 'view_records' %}" class="back-btn">← Back to Records</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    /* Google Font Import */
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+    body { 
+        background-color: #f7f7f7; 
+        font-family: 'Poppins', sans-serif; 
+        color: #2c3e50; 
+        padding-bottom: 50px;
+    }
+    .form-title {
+        color: #1a73e8; /* A modern blue */
+        font-weight: 700;
+        margin-bottom: 20px !important;
+    }
+    .form-container { 
+        max-width: 650px; 
+        margin: auto; 
+        background: #fff; 
+        padding: 30px 40px; 
+        border-radius: 12px; 
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); 
+        transition: all 0.3s ease-in-out;
+    }
+    
+    .form-field-group {
+        margin-bottom: 18px;
+    }
+    
+    .form-field-group label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 5px;
+        color: #34495e;
+    }
+
+    input[type="text"], input[type="number"], input[type="date"], select, textarea { 
+        width: 100%; 
+        padding: 12px; 
+        border-radius: 8px; 
+        border: 1px solid #dcdcdc; 
+        box-sizing: border-box; 
+        font-size: 16px;
+        transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    input[type="text"]:focus, input[type="number"]:focus, input[type="date"]:focus, select:focus, textarea:focus {
+        border-color: #1a73e8;
+        box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.1);
+        outline: none;
+    }
+    
+    textarea {
+        resize: vertical;
+    }
+    
+    .section-label {
+        display: block;
+        font-weight: 700;
+        margin-top: 25px;
+        margin-bottom: 15px;
+        color: #1a73e8;
+        border-bottom: 2px solid #e0e0e0;
+        padding-bottom: 5px;
+    }
+
+    /* Farmer Needs Grid */
+    .farmer-needs-grid { 
+        display: grid; 
+        grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); 
+        gap: 8px; 
+        margin-bottom: 20px; 
+    }
+    .checkbox-label { 
+        display: flex; 
+        align-items: center; 
+        gap: 8px; 
+        background: #f0f8ff; 
+        padding: 10px 12px; 
+        border-radius: 8px; 
+        cursor: pointer; 
+        font-weight: 500;
+        border: 1px solid #e0e0e0;
+        transition: background-color 0.3s;
+    }
+    .checkbox-label:hover { 
+        background: #e6f7ff; 
+        border-color: #1a73e8;
+    }
+    /* Style the actual checkbox */
+    .checkbox-label input[type="checkbox"] {
+        width: auto;
+        margin: 0;
+        transform: scale(1.2);
+    }
+
+    /* Button Styling */
+    .button-group {
+        margin-top: 30px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+    .primary-btn, .secondary-btn, .back-btn { 
+        padding: 14px 25px; 
+        border-radius: 10px; 
+        font-weight: 600; 
+        border: none; 
+        cursor: pointer; 
+        text-decoration: none; 
+        transition: background-color 0.3s, transform 0.1s;
+        text-align: center; 
+    }
+    .primary-btn { 
+        background-color: #1a73e8; 
+        color: #fff; 
+        box-shadow: 0 4px 10px rgba(26, 115, 232, 0.3);
+    }
+    .primary-btn:hover { 
+        background-color: #1764cc;
+        transform: translateY(-1px); 
+    }
+    .secondary-btn { 
+        background-color: #e8f0fe; 
+        color: #1a73e8; 
+        border: 1px solid #d2e3fc;
+    }
+    .secondary-btn:hover { 
+        background-color: #d2e3fc; 
+        color: #1764cc; 
+    }
+    .back-btn { 
+        background-color: #f0f0f0; 
+        color: #555; 
+    }
+    .back-btn:hover { 
+        background-color: #e0e0e0; 
+    }
+
+    /* Message Styling (Replaces alert()) */
+    #ui-message-container {
+        min-height: 20px;
+    }
+    .ui-message {
+        padding: 10px 15px;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: opacity 0.5s ease-out;
+        opacity: 1;
+        margin: 0 auto 15px;
+        max-width: 500px;
+    }
+    .msg-success {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+    .msg-error {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+    }
+    .success-message { 
+        color: #155724; 
+        margin-bottom: 15px; 
+        font-weight: 600; 
+        text-align: center;
+        background-color: #d4edda;
+        padding: 10px;
+        border-radius: 8px;
+    }
+    .text-danger { 
+        color: #dc3545 !important; 
+        font-size: 0.85em;
+        margin-top: 4px;
+        display: block;
+    }
+
+    /* Media Queries for Responsiveness */
+    @media (min-width: 600px) {
+        .button-group {
+            flex-direction: row;
+            justify-content: space-between;
+            gap: 15px;
+        }
+        .primary-btn, .secondary-btn, .back-btn {
+            width: auto;
+            flex-grow: 1;
+        }
+    }
+    @media (max-width: 700px) {
+        .form-container {
+            padding: 20px;
+            margin: 10px;
+        }
+    }
+</style>
+
+<script>
+    // Custom UI Message Function (Replaces alert())
+    function displayMessage(message, type = 'success') {
+        const container = document.getElementById('ui-message-container');
+        // Remove existing messages
+        while (container.firstChild) {
+            container.removeChild(container.firstChild);
+        }
+
+        const msgDiv = document.createElement('div');
+        msgDiv.className = 'ui-message ' + (type === 'success' ? 'msg-success' : 'msg-error');
+        msgDiv.textContent = message;
+        container.appendChild(msgDiv);
+
+        // Fade out after 4 seconds
+        setTimeout(() => {
+            msgDiv.style.opacity = '0';
+            setTimeout(() => {
+                msgDiv.remove();
+            }, 500); // Wait for transition to finish
+        }, 4000);
+    }
+
+    // Geolocation function
+    function getLocation() {
+        const locationInput = document.getElementById('id_location');
+        const locationBtn = document.getElementById('location-btn');
+        const locationIcon = document.getElementById('location-icon');
+
+        locationBtn.disabled = true;
+        locationIcon.textContent = '⏳';
+        locationInput.placeholder = 'Fetching location...';
+        locationInput.value = '';
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+                    // FIX: Corrected URL string interpolation (removed extra '$')
+                    const url = `https://www.google.com/maps?q=${lat},${lon}`;
+                    
+                    locationInput.value = url;
+                    locationInput.placeholder = 'Location fetched successfully';
+                    
+                    displayMessage("📍 Location fetched successfully!", 'success');
+                    
+                    locationBtn.disabled = false;
+                    locationIcon.textContent = '✅';
+                },
+                function(error) { 
+                    let errorMessage;
+                    switch (error.code) {
+                        case error.PERMISSION_DENIED:
+                            errorMessage = "Geolocation failed: User denied permission.";
+                            break;
+                        case error.POSITION_UNAVAILABLE:
+                            errorMessage = "Geolocation failed: Location information is unavailable.";
+                            break;
+                        case error.TIMEOUT:
+                            errorMessage = "Geolocation failed: The request timed out.";
+                            break;
+                        default:
+                            errorMessage = "Error fetching location: " + error.message;
+                            break;
+                    }
+                    displayMessage(errorMessage, 'error');
+                    
+                    locationBtn.disabled = false;
+                    locationIcon.textContent = '⚠️';
+                    locationInput.placeholder = 'Failed to fetch location.';
+                },
+                { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+            );
+        } else { 
+            displayMessage("Geolocation is not supported by this browser.", 'error');
+            locationBtn.disabled = false;
+            locationIcon.textContent = '❌';
+            locationInput.placeholder = 'Geolocation unsupported.';
+        }
+    }
+</script>
+{% endblock main-content %}
