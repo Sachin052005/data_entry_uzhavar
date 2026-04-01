@@ -78,14 +78,7 @@ DATABASES = {
         'HOST': 'localhost',
         'PORT': '5432',
 =======
-# -------------------- DATABASE (SQLite) --------------------
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
->>>>>>> 6ac9a5d6014ea9047a29d77916efca2cf8baadd2
-    }
-}
+
 
 # -------------------- PASSWORD VALIDATORS --------------------
 AUTH_PASSWORD_VALIDATORS = [
@@ -139,5 +132,3 @@ DATABASES = {
         'PORT': '5432',
     }
 }
-=======
->>>>>>> 6ac9a5d6014ea9047a29d77916efca2cf8baadd2
