@@ -10,12 +10,10 @@ import os
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # -------------------- SECURITY --------------------
-SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-gl0cv^og+^1mul@r++-feyx11_y8cd*zx)_dlf9m_+n+764o1i')
+SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-key')
 
-# Default DEBUG = True locally; Render sets RENDER=True in environment
 DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
-# Allow all hosts locally, restrict in production
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 if os.getenv('RENDER'):
     ALLOWED_HOSTS.append('.onrender.com')
@@ -28,8 +26,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
-    # Your app(s)
     'home',
 ]
 
@@ -51,7 +47,7 @@ ROOT_URLCONF = 'myproject.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],  # global templates directory
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -67,25 +63,24 @@ TEMPLATES = [
 # -------------------- WSGI --------------------
 WSGI_APPLICATION = 'myproject.wsgi.application'
 
-<<<<<<< HEAD
-
+# -------------------- DATABASE (POSTGRESQL) --------------------
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'myproject_db',
         'USER': 'postgres',
-        'PASSWORD': 'Sachin123',  # same password you used
+        'PASSWORD': 'Sachin123',
         'HOST': 'localhost',
         'PORT': '5432',
-=======
-
+    }
+}
 
 # -------------------- PASSWORD VALIDATORS --------------------
 AUTH_PASSWORD_VALIDATORS = [
-    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',},
-    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',},
-    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',},
-    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',},
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
 # -------------------- INTERNATIONALIZATION --------------------
@@ -106,7 +101,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # -------------------- DEFAULT AUTO FIELD --------------------
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# -------------------- LOGGING (optional, for debugging) --------------------
+# -------------------- LOGGING --------------------
 if not DEBUG:
     LOGGING = {
         'version': 1,
@@ -119,16 +114,3 @@ if not DEBUG:
             'level': 'INFO',
         },
     }
-<<<<<<< HEAD
-
-# FORCE PostgreSQL (FINAL OVERRIDE)
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'myproject_db',
-        'USER': 'postgres',
-        'PASSWORD': 'Sachin123',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
-}
