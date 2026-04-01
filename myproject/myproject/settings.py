@@ -67,6 +67,7 @@ TEMPLATES = [
 # -------------------- WSGI --------------------
 WSGI_APPLICATION = 'myproject.wsgi.application'
 
+<<<<<<< HEAD
 
 DATABASES = {
     'default': {
@@ -76,6 +77,13 @@ DATABASES = {
         'PASSWORD': 'Sachin123',  # same password you used
         'HOST': 'localhost',
         'PORT': '5432',
+=======
+# -------------------- DATABASE (SQLite) --------------------
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+>>>>>>> 6ac9a5d6014ea9047a29d77916efca2cf8baadd2
     }
 }
 
@@ -118,6 +126,7 @@ if not DEBUG:
             'level': 'INFO',
         },
     }
+<<<<<<< HEAD
 
 # FORCE PostgreSQL (FINAL OVERRIDE)
 DATABASES = {
@@ -130,3 +139,5 @@ DATABASES = {
         'PORT': '5432',
     }
 }
+=======
+>>>>>>> 6ac9a5d6014ea9047a29d77916efca2cf8baadd2
